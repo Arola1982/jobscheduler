@@ -1,0 +1,44 @@
+version: '3'
+services:
+  db:
+    container_name: js-db
+    image: mysql/mysql-server:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: js_db
+      MYSQL_USER: jsuser
+      MYSQL_PASSWORD: jspassword
+    volumes:
+      - "./database_vol:/var/lib/mysql"
+  master:
+    container_name: js-master
+    image: arola1982/jobscheduler:latest
+    environment:
+      DB_HOST: js-db
+      DB_SCHEMA: js_db
+      DB_USER: jsuser
+      DB_PASSWORD: jspassword
+      JS_AGENTS: "default:js-agent:4445"
+    build:
+      context: jobscheduler/.
+    volumes:
+      - "./master_vol:/opt/jobscheduler"
+  joc:
+    container_name: js-joc
+    image: arola1982/jobscheduler-joc:latest
+    environment:
+      DB_HOST: js-db
+      DB_SCHEMA: js_db
+      DB_USER: jsuser
+      DB_PASSWORD: jspassword
+    build:
+      context: joc/.
+    ports:
+      - "4446:4446"
+    volumes:
+      - "./joc_vol:/opt/joc"
+  agent:
+    container_name: js-agent
+    image: arola1982/jobscheduler-agent:latest
+    build:
+      context: jobscheduler_agent/.
