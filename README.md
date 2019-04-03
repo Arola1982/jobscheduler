@@ -21,7 +21,7 @@ MySQL Database
 
 To use a commercial license, set LICENSE_OPTION to blank, and then set the LICENSE_KEY
 
-To add agents, set JS_AGENTS in the format of agent_name:agent_address:agent_port,agent_name2:agent_address2:agent_port2 (Comma separated)
+To add agents, set JS_AGENTS in the format of `agent_name:agent_address:agent_port,agent_name2:agent_address2:agent_port2` (Comma separated)
 
 ### JOC:
 
