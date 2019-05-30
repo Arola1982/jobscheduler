@@ -56,4 +56,11 @@ if [ "$JAVABIN" != "" ]; then
   JAVABINPATH="${JAVABIN}/"
 fi
 
+export DISPLAY
+if [ -f "$HOME/.Xauthority" ]
+then
+  XAUTHORITY="$HOME/.Xauthority"
+  export XAUTHORITY
+fi
+
 ${JAVABINPATH}java -jar `dirname $0 /jobscheduler_linux-x64.1.12.8.jar $*`
