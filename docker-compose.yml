@@ -20,7 +20,7 @@ services:
       DB_PASSWORD: jspassword
       JS_AGENTS: "default:js-agent:4445"
     build:
-      context: jobscheduler/.
+      context: .
     volumes:
       - "./master_vol:/opt/jobscheduler"
   joc:
@@ -41,4 +41,4 @@ services:
     container_name: js-agent
     image: arola1982/jobscheduler-agent:latest
     build:
-      context: jobscheduler_agent/.
+      context: agent/.

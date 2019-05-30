@@ -1,0 +1,6 @@
+[submodule "joc"]
+	path = joc
+	url = https://github.com/Arola1982/jobscheduler-joc.git
+[submodule "agent"]
+	path = agent
+	url = https://github.com/Arola1982/jobscheduler-agent.git
