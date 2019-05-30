@@ -1,8 +1,11 @@
 #!/bin/sh
-#
-#--------------------------------#
-# Modified for docker
-#--------------------------------#
+# 
+# ------------------------------------------------------------
+# Company: Software- und Organisations-Service GmbH
+# Author : Oliver Haufe <oliver.haufe@sos-berlin.com>
+# Dated  : 2017-08-16
+# Purpose: starts installer 
+# ------------------------------------------------------------
 
 
 usage () {
@@ -20,6 +23,31 @@ if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
 fi
 
 JAVABINPATH=
+
+if [ "$USER" = "root" ]; then
+  echo "Please don't call this script as root"
+  exit 1
+fi
+
+USE_UNPRIVILEGED="n"
+SUDO_E_OPTION=""
+
+if [ "$1" = "-u" ] || [ "$1" = "--unprivileged" ] || [ "$1" = "-E" ]; then
+  if [ "$1" = "-u" ] || [ "$1" = "--unprivileged" ]; then
+    USE_UNPRIVILEGED="y"
+  else
+    SUDO_E_OPTION="-E"
+  fi
+  shift
+fi
+if [ "$1" = "-u" ] || [ "$1" = "--unprivileged" ] || [ "$1" = "-E" ]; then
+  if [ "$1" = "-u" ] || [ "$1" = "--unprivileged" ]; then
+    USE_UNPRIVILEGED="y"
+  else
+    SUDO_E_OPTION="-E"
+  fi
+  shift
+fi
 
 if [ "$#" -gt 1 ]; then
   usage
@@ -56,11 +84,39 @@ if [ "$JAVABIN" != "" ]; then
   JAVABINPATH="${JAVABIN}/"
 fi
 
+if [ "$USE_UNPRIVILEGED" = "y" ]; then
+  echo "${JAVABINPATH}java -Dizpack.mode=privileged -jar \"`dirname $0`/jobscheduler_linux-x64.1.12.8.jar\" $*"
+  "${JAVABINPATH}java" -Dizpack.mode=privileged -jar "`dirname $0`/jobscheduler_linux-x64.1.12.8.jar" $*
+  exit 0
+fi
+
+
+which_return="`which sudo 2>&1`"
+sudo_exit=$?
+USESU=n 
+
 export DISPLAY
 if [ -f "$HOME/.Xauthority" ]
-then
+then 
   XAUTHORITY="$HOME/.Xauthority"
   export XAUTHORITY
 fi
 
-${JAVABINPATH}java -jar `dirname $0 /jobscheduler_linux-x64.1.12.8.jar $*`
+if [ $sudo_exit -eq 0 ]
+then
+  echo "sudo $SUDO_E_OPTION \"${JAVABINPATH}java\" -jar \"`dirname $0`/jobscheduler_linux-x64.1.12.8.jar\" $*"
+  sudo $SUDO_E_OPTION "${JAVABINPATH}java" -jar "`dirname $0`/jobscheduler_linux-x64.1.12.8.jar" $*
+  if [ $sudo_exit -ne 0 ]
+  then
+    echo "Do you want to use 'su' instead of 'sudo'? (y or n)"
+    read USESU
+  fi
+else
+  USESU=y 
+fi
+
+if [ "$USESU" = "y" ] || [ "$USESU" = "Y" ]
+then
+  echo "su root -c \"${JAVABINPATH}java -jar \\\"`dirname $0`/jobscheduler_linux-x64.1.12.8.jar\\\" $*\""
+  su root -c "\"${JAVABINPATH}java\" -jar \"`dirname $0`/jobscheduler_linux-x64.1.12.8.jar\" $*"
+fi

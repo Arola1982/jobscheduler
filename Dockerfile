@@ -1,4 +1,4 @@
-FROM openjdk
+FROM openjdk:8
 
 MAINTAINER Adam Copley <adam.copley@arola.co.uk>
 
@@ -23,7 +23,7 @@ RUN chmod +x ${TMP_INSTALL_DIR}/*.sh
 
 WORKDIR ${TMP_INSTALL_DIR}
 
-RUN curl -o jobscheduler_linux-x64.1.12.8.tar.gz \
+RUN curl -k -o jobscheduler_linux-x64.1.12.8.tar.gz \
   https://download.sos-berlin.com/JobScheduler.1.12/jobscheduler_linux-x64.1.12.8.tar.gz && \
   tar -xvzf jobscheduler_linux-x64.1.12.8.tar.gz && \
   rm -f jobscheduler_linux-x64.1.12.8.tar.gz
