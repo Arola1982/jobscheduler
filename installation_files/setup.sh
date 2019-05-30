@@ -56,4 +56,4 @@ if [ "$JAVABIN" != "" ]; then
   JAVABINPATH="${JAVABIN}/"
 fi
 
-${JAVABINPATH}java -jar `dirname $0 /jobscheduler_linux-x64.1.12.8.jar $*
+${JAVABINPATH}java -jar `dirname $0 /jobscheduler_linux-x64.1.12.8.jar $*`
