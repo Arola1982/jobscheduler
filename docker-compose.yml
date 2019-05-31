@@ -14,11 +14,12 @@ services:
     container_name: js-master
     image: arola1982/jobscheduler:latest
     environment:
+      JAVABIN: /usr/local/openjdk-11/bin
       DB_HOST: js-db
       DB_SCHEMA: js_db
       DB_USER: jsuser
       DB_PASSWORD: jspassword
-      JS_AGENTS: "default:js-agent:4445"
+      JS_AGENTS: "agent1:js-agent1:4445,agent2:js-agent2:4445"
     build:
       context: .
     volumes:
@@ -27,6 +28,7 @@ services:
     container_name: js-joc
     image: arola1982/jobscheduler-joc:latest
     environment:
+      JAVABIN: /usr/local/openjdk-11/bin
       DB_HOST: js-db
       DB_SCHEMA: js_db
       DB_USER: jsuser
@@ -37,8 +39,17 @@ services:
       - "4446:4446"
     volumes:
       - "./joc_vol:/opt/joc"
-  agent:
-    container_name: js-agent
+  agent1:
+    container_name: js-agent1
     image: arola1982/jobscheduler-agent:latest
+    environment:
+      JAVABIN: /usr/local/openjdk-11/bin
+    build:
+      context: agent/.
+  agent2:
+    container_name: js-agent2
+    image: arola1982/jobscheduler-agent:latest
+    environment:
+      JAVABIN: /usr/local/openjdk-11/bin
     build:
       context: agent/.
